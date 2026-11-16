@@ -19,8 +19,6 @@
 // #include <cctag/algebra/Invert.hpp>
 #include <cctag/geometry/Ellipse.hpp>
 
-#include <opencv2/core/core_c.h>
-#include <opencv2/core/types_c.h>
 
 #include <boost/math/special_functions/pow.hpp>
 #include <boost/math/constants/constants.hpp>

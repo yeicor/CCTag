@@ -12,7 +12,6 @@
 #include <opencv2/opencv.hpp>
 
 #ifdef CCTAG_SERIALIZE
-#include <opencv2/imgproc/imgproc_c.h>
 #endif
 
 namespace bfs = boost::filesystem;
@@ -131,15 +130,10 @@ void CCTagVisualDebug::newSession(const std::string & sessionName) {
 
 void CCTagVisualDebug::drawText(const cctag::Point2d<Eigen::Vector3f> & p, const std::string & text, const cctag::Color & color) {
 #ifdef CCTAG_SERIALIZE
-  CvFont font1;
-  cvInitFont(&font1, CV_FONT_HERSHEY_SIMPLEX, 0.8, 0.8, 0, 2);
-
-  auto clr = CV_RGB(color[0] * 255, color[1] * 255, color[2] * 255);
-  cv::Mat iplBack = _backImage;
-  cv::putText( iplBack, text.c_str(),
-               cvPoint((int) p.x(), (int) p.y()),
-               font1.font_face, font1.hscale,
-               clr );
+  cv::putText( _backImage, text,
+               cv::Point((int) p.x(), (int) p.y()),
+               cv::FONT_HERSHEY_SIMPLEX, 0.8,
+               cv::Scalar(color[0] * 255, color[1] * 255, color[2] * 255), 2 );
 #endif
 }
 
@@ -250,9 +244,6 @@ void CCTagVisualDebug::drawMarker(const cctag::CCTag& marker, bool drawScaledMar
 void CCTagVisualDebug::drawInfos(const cctag::CCTag& marker, bool drawScaledMarker)
 {
 #ifdef CCTAG_SERIALIZE
-    CvFont font1;
-  cvInitFont(&font1, CV_FONT_HERSHEY_SIMPLEX, 0.8, 0.8, 0, 2);
-
   std::string sId = boost::lexical_cast<std::string>(marker.id() + 1);
 
   int x, y;
@@ -264,12 +255,10 @@ void CCTagVisualDebug::drawInfos(const cctag::CCTag& marker, bool drawScaledMark
       y = int (marker.outerEllipse().center().y());
   }
 
-  auto clr = CV_RGB(255, 140, 0);
-  cv::Mat iplImg = _backImage;
-  cv::putText( iplImg, sId.c_str(),
-               cvPoint(x-10, y+10),
-               font1.font_face, font1.hscale,
-               clr );
+  cv::putText( _backImage, sId,
+               cv::Point(x - 10, y + 10),
+               cv::FONT_HERSHEY_SIMPLEX, 0.8,
+               cv::Scalar(255, 140, 0), 2 );
 #endif
 }
 

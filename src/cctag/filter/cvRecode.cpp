@@ -8,10 +8,7 @@
 #include <cctag/utils/Defines.hpp>
 
 #include <opencv2/core/core.hpp>
-#include <opencv2/core/core_c.h>
 #include <opencv2/core/operations.hpp>
-#include <opencv2/imgproc/imgproc_c.h>
-#include <opencv2/imgproc/types_c.h>
 #include <opencv2/opencv.hpp>
 
 #include "cctag/filter/cvRecode.hpp"
@@ -59,16 +56,16 @@ void cvRecodedCanny(const cv::Mat& imgGraySrc,
     int i, j;
 
     if(imgGraySrc.type() != CV_8UC1 || imgCanny.type() != CV_8UC1)
-        CV_Error(CV_StsUnsupportedFormat, "");
+        CV_Error(cv::Error::StsUnsupportedFormat, "");
 
-    if(!CV_ARE_SIZES_EQ(&imgGraySrc, &imgCanny))
-        CV_Error(CV_StsUnmatchedSizes, "");
+    if(imgGraySrc.size() != imgCanny.size())
+        CV_Error(cv::Error::StsUnmatchedSizes, "");
 
     std::tie(low_thresh, high_thresh) = std::minmax(low_thresh, high_thresh);
 
     aperture_size &= INT_MAX;
     if((aperture_size & 1) == 0 || aperture_size < 3 || aperture_size > 7)
-        CV_Error(CV_StsBadFlag, "");
+        CV_Error(cv::Error::StsBadFlag, "");
 
     // Apply the (9x9) 2D following kernel for the derivatives in x and y direction
     const cv::Mat kerneldX = (cv::Mat_<float>(9,9) <<
@@ -94,7 +91,11 @@ void cvRecodedCanny(const cv::Mat& imgGraySrc,
 #ifndef USE_INTEGER_REP
     if(flags & CV_CANNY_L2_GRADIENT)
     {
-        Cv32suf ul, uh;
+        union
+        {
+            float f;
+            int i;
+        } ul, uh;
         ul.f = (float)low_thresh;
         uh.f = (float)high_thresh;
 

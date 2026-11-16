@@ -10,6 +10,13 @@
 
 #include <opencv2/core/core.hpp>
 
+// OpenCV 5 removed the C API headers along with CV_CANNY_L2_GRADIENT.
+// The value is part of the historical cv::Canny flag ABI and is still used
+// internally to select the Euclidean gradient magnitude below.
+#ifndef CV_CANNY_L2_GRADIENT
+#define CV_CANNY_L2_GRADIENT 2
+#endif
+
 namespace cctag {
 struct Parameters;
 };

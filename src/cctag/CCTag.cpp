@@ -15,7 +15,6 @@
 #include <cctag/optimization/conditioner.hpp>
 #include <cctag/geometry/2DTransform.hpp>
 
-#include <opencv2/core/core_c.h>
 
 #include <boost/array.hpp>
 #include <boost/mpl/bool.hpp>
